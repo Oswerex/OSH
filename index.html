@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Safety Training with Assessment</title>
+<style>
+    :root {
+        --primary:#0b5fff;
+        --danger:#cc0033;
+        --success:#1a7f37;
+        --bg:#f2f6ff;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        background: var(--bg);
+        margin:0; padding:0;
+    }
+    .container {
+        max-width: 900px;
+        margin: 20px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    #startBtn {
+        background: var(--primary);
+        color:white;
+    }
+    #startBtn:disabled {
+        background: gray;
+        cursor:not-allowed;
+    }
+    .question {
+        margin-bottom: 20px;
+        background:#f8f9ff;
+        padding:15px;
+        border-radius:10px;
+    }
+    #certificateArea {
+        display:none;
+        margin-top:20px;
+        padding:20px;
+        border:2px solid var(--success);
+        border-radius:10px;
+        background:#e8ffee;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Safety Training</h2>
+    <p>Panoorin muna ang video bago lumabas ang "Start Assessment" button.</p>
+
+    <video id="trainingVideo" width="100%" controls>
+        <source src="YOUR_ONEDRIVE_DIRECT_VIDEO_LINK_HERE" type="video/mp4">
+    </video>
+
+    <br><br>
+    <button id="startBtn" disabled>Start Assessment</button>
+
+    <form id="examForm" style="display:none; margin-top:20px;">
+        <div class="question">
+            <label>1. Ano ang maximum speed limit sa loob ng Meralco Operating Center?</label><br>
+            <input type="radio" name="q1" value="20 kph">20 kph<br>
+            <input type="radio" name="q1" value="30 kph">30 kph<br>
+            <input type="radio" name="q1" value="40 kph">40 kph
+        </div>
+
+        <div class="question">
+            <label>2. Meralco is (________) facility:</label><br>
+            <input type="radio" name="q2" value="Smoke-free">Smoke-free<br>
+            <input type="radio" name="q2" value="Alcohol-free">Alcohol-free<br>
+            <input type="radio" name="q2" value="Drug-free">Drug-free
+        </div>
+
+        <div class="question">
+            <label>3. Ano ang dapat gamitin bago umakyat sa elevated area?</label><br>
+            <input type="radio" name="q3" value="Hard hat">Hard hat<br>
+            <input type="radio" name="q3" value="Safety harness">Safety harness<br>
+            <input type="radio" name="q3" value="Rubber shoes">Rubber shoes
+        </div>
+
+        <div class="question">
+            <label>4. Ilang points ang dapat makuha para pumasa?</label><br>
+            <input type="radio" name="q4" value="3">3<br>
+            <input type="radio" name="q4" value="4">4<br>
+            <input type="radio" name="q4" value="5">5
+        </div>
+
+        <div class="question">
+            <label>5. Ano ang dapat gawin kung may unsafe condition?</label><br>
+            <input type="radio" name="q5" value="Ireport agad">Ireport agad<br>
+            <input type="radio" name="q5" value="Hayaan lang">Hayaan lang<br>
+            <input type="radio" name="q5" value="Ipost sa Facebook">Ipost sa Facebook
+        </div>
+
+        <button type="button" onclick="submitAssessment()" style="background:var(--primary); color:white;">Submit</button>
+    </form>
+
+    <div id="certificateArea">
+        <h2 style="color:var(--success);">PASADO KA!</h2>
+        <p>I-download ang iyong certificate:</p>
+        <button onclick="downloadCertificate()" style="background:var(--success); color:white;">Download Certificate (PDF)</button>
+    </div>
+</div>
+
+<script>
+    const video = document.getElementById("trainingVideo");
+    const startBtn = document.getElementById("startBtn");
+
+    video.addEventListener("ended", () => {
+        startBtn.disabled = false;
+    });
+
+    startBtn.addEventListener("click", () => {
+        document.getElementById("examForm").style.display = "block";
+        startBtn.style.display = "none";
+    });
+
+    function submitAssessment() {
+        let score = 0;
+
+        if (document.querySelector('input[name="q1"]:checked')?.value === "30 kph") score++;
+        if (document.querySelector('input[name="q2"]:checked')?.value === "Smoke-free") score++;
+        if (document.querySelector('input[name="q3"]:checked')?.value === "Safety harness") score++;
+        if (document.querySelector('input[name="q4"]:checked')?.value === "4") score++;
+        if (document.querySelector('input[name="q5"]:checked')?.value === "Ireport agad") score++;
+
+        if (score >= 4) {
+            document.getElementById("certificateArea").style.display = "block";
+        } else {
+            alert("Hindi ka pumasa. Kailangan 4/5.");
+        }
+    }
+
+    function downloadCertificate() {
+        const pdfContent = "Congratulations! You passed the Safety Training Assessment.";
+        const blob = new Blob([pdfContent], { type: "application/pdf" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "Certificate.pdf";
+        link.click();
+    }
+</script>
+</body>
+</html>
